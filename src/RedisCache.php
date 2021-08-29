@@ -3,7 +3,6 @@
 namespace Wind\Cache;
 
 use Wind\Redis\Redis;
-use function Amp\call;
 
 class RedisCache implements \Psr\SimpleCache\CacheInterface
 {
@@ -17,10 +16,9 @@ class RedisCache implements \Psr\SimpleCache\CacheInterface
 
     public function get($key, $defaultValue=null)
     {
-        return call(function() use ($key, $defaultValue) {
-            $data = yield $this->redis->get($key);
-            return $data !== null ? unserialize($data) : $defaultValue;
-        });
+        $data = $this->redis->get($key);
+        var_dump($data);
+        return $data !== null ? unserialize($data) : $defaultValue;
     }
 
     public function set($key, $value, $ttl=0)
@@ -41,14 +39,12 @@ class RedisCache implements \Psr\SimpleCache\CacheInterface
 
     public function getMultiple($keys, $default = null)
     {
-        return call(function() use ($keys, $default) {
-            $arr = yield $this->redis->mGet($keys);
-            $data = [];
-            foreach ($keys as $i => $k) {
-                $data[$k] = isset($arr[$i]) ? $arr[$i] : $default;
-            }
-            return $data;
-        });
+        $arr = $this->redis->mGet($keys);
+        $data = [];
+        foreach ($keys as $i => $k) {
+            $data[$k] = isset($arr[$i]) ? $arr[$i] : $default;
+        }
+        return $data;
     }
 
     public function setMultiple($values, $ttl = null)

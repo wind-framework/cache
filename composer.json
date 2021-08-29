@@ -2,10 +2,10 @@
     "name": "wind-framework/cache",
     "description": "Wind framework coroutine cache component.",
     "type": "library",
-    "version": "0.1.1",
+    "version": "1.0.0-dev",
     "require": {
-        "wind-framework/wind-framework": "~0.1",
-        "wind-framework/redis": "~0.1",
+        "wind-framework/wind-framework": "1.0.0-dev",
+        "wind-framework/redis": "1.0.0-dev",
         "psr/simple-cache": "^1.0"
     },
     "license": "Apache-2.0",
