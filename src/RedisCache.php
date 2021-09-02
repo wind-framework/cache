@@ -17,7 +17,6 @@ class RedisCache implements \Psr\SimpleCache\CacheInterface
     public function get($key, $defaultValue=null)
     {
         $data = $this->redis->get($key);
-        var_dump($data);
         return $data !== null ? unserialize($data) : $defaultValue;
     }
 
