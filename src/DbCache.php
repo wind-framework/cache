@@ -136,7 +136,8 @@ class DbCache implements \Psr\SimpleCache\CacheInterface
     }
 
     public function clear() {
-        // TODO: Implement clear() method.
+        $table = $this->db->prefix($this->table);
+        return $this->db->execute("TURNCATE TABLE `$table`");
     }
 }
 
