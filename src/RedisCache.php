@@ -4,6 +4,9 @@ namespace Wind\Cache;
 
 use Wind\Redis\Redis;
 
+/**
+ * Cache base on Redis
+ */
 class RedisCache implements \Psr\SimpleCache\CacheInterface
 {
 
@@ -14,10 +17,10 @@ class RedisCache implements \Psr\SimpleCache\CacheInterface
         $this->redis = $redis;
     }
 
-    public function get($key, $defaultValue=null)
+    public function get($key, $default=null)
     {
         $data = $this->redis->get($key);
-        return $data !== null ? unserialize($data) : $defaultValue;
+        return $data !== null ? unserialize($data) : $default;
     }
 
     public function set($key, $value, $ttl=0)
@@ -28,7 +31,7 @@ class RedisCache implements \Psr\SimpleCache\CacheInterface
 
     public function delete($key)
     {
-        return $this->redis->del($key);
+        return $this->redis->del($key) > 0;
     }
 
     public function clear()
