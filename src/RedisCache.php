@@ -17,29 +17,29 @@ class RedisCache implements \Psr\SimpleCache\CacheInterface
         $this->redis = $redis;
     }
 
-    public function get($key, $default=null)
+    public function get(string $key, mixed $default=null): mixed
     {
         $data = $this->redis->get($key);
         return $data !== null ? unserialize($data) : $default;
     }
 
-    public function set($key, $value, $ttl=0)
+    public function set(string $key, mixed $value, null|int|\DateInterval $ttl=0): bool
     {
         $value = serialize($value);
         return $this->redis->set($key, $value, $ttl);
     }
 
-    public function delete($key)
+    public function delete(string $key): bool
     {
         return $this->redis->del($key) > 0;
     }
 
-    public function clear()
+    public function clear(): bool
     {
         // TODO: Implement clear() method.
     }
 
-    public function getMultiple($keys, $default = null)
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
     {
         $arr = $this->redis->mGet($keys);
         $data = [];
@@ -49,17 +49,17 @@ class RedisCache implements \Psr\SimpleCache\CacheInterface
         return $data;
     }
 
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple(iterable $values, null|int|\DateInterval $ttl = null): bool
     {
         return $this->redis->mSet($values);
     }
 
-    public function deleteMultiple($keys)
+    public function deleteMultiple(iterable $keys): bool
     {
         return call_user_func_array([$this->redis, 'del'], $keys);
     }
 
-    public function has($key)
+    public function has(string $key): bool
     {
         return $this->redis->exists($key);
     }
