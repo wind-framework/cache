@@ -8,11 +8,12 @@ use Wind\Memcache\Memcache;
 /**
  * Cache base on Memcache
  */
-class MemcacheCache implements CacheInterface
+class MemcacheCache extends BaseCache implements CacheInterface
 {
 
     public function __construct(private Memcache $memcache)
     {
+        parent::init();
     }
 
     public function get(string $key, mixed $default = null): mixed
@@ -21,9 +22,10 @@ class MemcacheCache implements CacheInterface
         return $data !== false ? unserialize($data) : $default;
     }
 
-    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = 0): bool
+    public function set(string $key, mixed $value, null|int|\DateInterval $ttl = null): bool
     {
         $value = serialize($value);
+        $ttl = $this->normalizeTTL($ttl);
         return $this->memcache->set($key, $value, $ttl) !== false;
     }
 

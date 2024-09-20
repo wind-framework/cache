@@ -7,13 +7,14 @@ use Wind\Redis\Redis;
 /**
  * Cache base on Redis
  */
-class RedisCache implements \Psr\SimpleCache\CacheInterface
+class RedisCache extends BaseCache implements \Psr\SimpleCache\CacheInterface
 {
 
     private $redis;
 
     public function __construct(Redis $redis)
     {
+        parent::init();
         $this->redis = $redis;
     }
 
@@ -23,9 +24,10 @@ class RedisCache implements \Psr\SimpleCache\CacheInterface
         return $data !== null ? unserialize($data) : $default;
     }
 
-    public function set(string $key, mixed $value, null|int|\DateInterval $ttl=0): bool
+    public function set(string $key, mixed $value, null|int|\DateInterval $ttl=null): bool
     {
         $value = serialize($value);
+        $ttl = $this->normalizeTTL($ttl);
         return $this->redis->set($key, $value, $ttl);
     }
 
